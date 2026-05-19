@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collaborative Editor</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* [GAMITIN MO DITO ANG MGA CSS MO DATI PARA HINDI MABAGO ANG DESIGN] */
@@ -16,28 +16,28 @@
         .image-wrapper img { display: block; pointer-events: none; }
         .text-overlay { position: absolute; padding: 4px; border: 1px dashed red; cursor: move; }
         /* [DAGDAG PA DITO ANG IBA MONG CSS] */
-    </style>
-</head>
+    <style>
+<head>
 <body>
 
 <div class="left-sidebar">
-    <h2>Toolbar</h2>
+    <h2>Toolbar<h2>
     <input type="file" id="imageInput" multiple>
-    <button id="downloadBtn">I-download PDF</button>
-</div>
+    <button id="downloadBtn">I-download PDF<button>
+<div>
 
 <div class="main-area">
     <div class="workspace" id="workspace">
         <div class="image-wrapper" id="imageWrapper" style="display: none;">
             <img id="mainImage" src="">
-        </div>
-    </div>
-</div>
+        <div>
+    <div>
+<div>
 
 <div class="right-sidebar">
-    <h2>Files</h2>
-    <div id="fileList"></div>
-</div>
+    <h2>Files<h2>
+    <div id="fileList"><div>
+<div>
 
 <script>
     // --- SUPABASE CONFIGURATION ---
