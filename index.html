@@ -85,8 +85,12 @@
         input, button { width: 100% !important; padding: 12px !important; margin-bottom: 10px !important; box-sizing: border-box; font-size: 16px; }
         #login-screen input { width: 90% !important; }
     }
-</style>
-}>
+</file-editor {
+    font-size: 10px;
+    font-weight: 500;
+    margin-top: 2px;
+    color: #2563eb; /* Blue para kitang-kita */
+    display: block;>
 </<meta name="viewport" content="width=device-width, initial-scale=1.0">>
 <body>
 
@@ -354,6 +358,11 @@
                 const info = document.createElement('div'); info.className = 'file-info';
                 const name = document.createElement('span'); name.className = 'file-name'; name.innerText = file.name;
                 const date = document.createElement('span'); date.className = 'file-date'; date.innerText = file.date || 'Unknown';
+                const editor = document.createElement('span'); 
+    editor.className = 'file-editor'; // Pwede mong gamitin ang same class sa date
+    editor.style.fontSize = '10px';
+    editor.style.color = '#2563eb'; // Blue para kitang-kita
+    editor.innerText = file.lastEditedBy ? `Last edit: ${file.lastEditedBy}` : "No edits yet";
                 info.appendChild(name); info.appendChild(date);
 
                 const actions = document.createElement('div'); actions.className = 'file-actions';
@@ -388,6 +397,7 @@
     // WORKSPACE ACTIONS & HISTORY
     function recordAction() {
         if (activeFileId === null) return; const file = filesArray.find(f => f.id === activeFileId); if (!file) return;
+        file.lastEditedBy = activeUserSelect.value;
         const overlays = imageWrapper.querySelectorAll('.text-overlay');
         const currentTextsState = Array.from(overlays).map(box => ({
             content: box.innerText.replace(box.querySelector('.user-badge')?.innerText || '', '').trim(), 
