@@ -79,7 +79,33 @@
         .dot { width: 6px; height: 6px; background-color: #059669; border-radius: 50%; }
         .live-status.offline .dot { background-color: #d97706; }
         .divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
-    </style>
+    </style> @media (max-width: 768px) {
+  /* Siguraduhing may espasyo sa gilid para hindi sagad sa screen */
+  body {
+    padding: 10px;
+    margin: 0;
+  }
+  
+  /* Gawing pababa ang pwesto ng mga kahon imbes na tabi-tabi */
+  .container, #workspace-container {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+  
+  /* Palakihin ang mga input box at buttons para madaling ma-tap ng daliri */
+  input, button {
+    width: 100% !important;
+    padding: 12px !important;
+    margin-bottom: 10px !important;
+    box-sizing: border-box;
+    font-size: 16px; /* Para hindi mag-auto zoom ang iPhone kapag nag-type */
+  }
+
+  /* I-adjust din ang login screen na ginawa natin kanina */
+  #login-screen input {
+    width: 90% !important;
+  }
+}
 </head> <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <body>
 
