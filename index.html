@@ -210,13 +210,13 @@
         const SUPABASE_URL = "https://iqmjdlzxtpqbsfolnmzt.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_VSag97uggtdGwBlZvXuPbw_jTCNeDPc";
         
-        if (SUPABASE_URL !== "IPALIT_ANG_SUPABASE_URL_DITO" && SUPABASE_URL.startsWith("http")) {
+        if (SUPABASE_URL !== "https://iqmjdlzxtpqbsfolnmzt.supabase.co" && SUPABASE_URL.startsWith("http")) {
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             appChannel = supabaseClient.channel('room-1', { config: { broadcast: { self: false } } });
             appChannel.on('broadcast', { event: 'sync-state' }, (p) => handleIncomingNetworkSync(p.payload)).subscribe((status) => {
                 if (status === 'SUBSCRIBED') {
                     statusIndicator.className = 'live-status';
-                    statusIndicator.innerHTML = '<div class="dot"></div> System Synced Online';
+                    statusIndicator.innerHTML = '<div class="dot"><div> System Synced Online';
                 }
             });
         }
