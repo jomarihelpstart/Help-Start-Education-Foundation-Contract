@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Collaborative Editor</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title> Help Start Education Foundation Contract <title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><script>
     <!-- DAGDAG: PDF.js library para sa pag-convert ng PDF to Image -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"><script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* Modern Corporate Font */
@@ -79,14 +79,14 @@
         .dot { width: 6px; height: 6px; background-color: #059669; border-radius: 50%; }
         .live-status.offline .dot { background-color: #d97706; }
         .divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
-    </style>
-</head>
+    <style>
+<head>
 <body>
 
 <div class="left-sidebar">
     <div>
-        <div id="statusIndicator" class="live-status offline"><div class="dot"></div> Local Mode (Offline)</div>
-    </div>
+        <div id="statusIndicator" class="live-status offline"><div class="dot"><div> Local Mode (Offline)</div>
+    <div>
 
     <div class="control-group">
         <h2>Active User</h2>
@@ -96,7 +96,7 @@
             </select>
             <button id="editUserBtn" class="btn-secondary" style="padding: 0 12px;" title="Rename">✎</button>
             <button id="deleteUserBtn" class="btn-secondary" style="padding: 0 12px;" title="Delete">✕</button>
-        </div>
+        <div>
         <div style="display: flex; gap: 8px;">
             <input type="text" id="newUserName" placeholder="Add team member..." style="margin-bottom: 0;">
             <button id="addUserBtn" class="btn-secondary" style="padding: 0 16px;">Add</button>
@@ -207,8 +207,8 @@
     // --- SUPABASE FAIL-SAFE CONFIG ---
     let appChannel = null;
     try {
-        const SUPABASE_URL = "IPALIT_ANG_SUPABASE_URL_DITO"; 
-        const SUPABASE_ANON_KEY = "IPALIT_ANG_SUPABASE_ANON_KEY_DITO";
+        const SUPABASE_URL = "https://iqmjdlzxtpqbsfolnmzt.supabase.co"; 
+        const SUPABASE_ANON_KEY = "sb_publishable_VSag97uggtdGwBlZvXuPbw_jTCNeDPc";
         
         if (SUPABASE_URL !== "IPALIT_ANG_SUPABASE_URL_DITO" && SUPABASE_URL.startsWith("http")) {
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
