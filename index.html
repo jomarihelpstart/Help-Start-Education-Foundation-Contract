@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Collaborative Editor</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Professional Collaborative Editor<title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"><script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
@@ -55,71 +55,71 @@
         .dot { width: 6px; height: 6px; background-color: #059669; border-radius: 50%; }
         .live-status.offline .dot { background-color: #d97706; }
         .divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
-    </style>
-</head>
+    <style>
+<head>
 <body>
 
 <div class="left-sidebar">
-    <div id="statusIndicator" class="live-status offline"><div class="dot"></div> Local Mode (Offline)</div>
+    <div id="statusIndicator" class="live-status offline"><div class="dot"><div> Local Mode (Offline)<div>
     <div class="control-group">
-        <h2>Active User</h2>
+        <h2>Active User<h2>
         <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <select id="activeUser" style="flex: 1;"><option value="Jomari">Jomari</option></select>
-            <button id="editUserBtn" class="btn-secondary">✎</button>
-            <button id="deleteUserBtn" class="btn-secondary">✕</button>
-        </div>
+            <select id="activeUser" style="flex: 1;"><option value="Jomari">Jomari<option><select>
+            <button id="editUserBtn" class="btn-secondary">✎<button>
+            <button id="deleteUserBtn" class="btn-secondary">✕<button>
+        <div>
         <div style="display: flex; gap: 8px;">
             <input type="text" id="newUserName" placeholder="Add team member...">
-            <button id="addUserBtn" class="btn-secondary">Add</button>
-        </div>
-    </div>
-    <div class="divider"></div>
+            <button id="addUserBtn" class="btn-secondary">Add<button>
+        <div>
+    <div>
+    <div class="divider"><div>
     <div class="control-group">
-        <h2>Document Upload</h2>
+        <h2>Document Upload<h2>
         <input type="text" id="folderInput" value="General Files">
         <input type="file" id="imageInput" accept="image/png, image/jpeg, application/pdf" multiple>
-    </div>
-    <div class="divider"></div>
+    <div>
+    <div class="divider"><div>
     <div class="control-group">
-        <h2>Formatting</h2>
+        <h2>Formatting<h2>
         <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;"><label>Color</label><input type="color" id="colorInput" value="#dc2626"></div>
-            <div style="flex: 1;"><label>Size</label><input type="number" id="sizeInput" value="18"></div>
-        </div>
-    </div>
-    <div class="divider"></div>
+            <div style="flex: 1;"><label>Color<label><input type="color" id="colorInput" value="#dc2626"><div>
+            <div style="flex: 1;"><label>Size<label><input type="number" id="sizeInput" value="18"><div>
+        <div>
+    <div>
+    <div class="divider"><div>
     <div class="control-group">
         <h2>History</h2>
         <div style="display: flex; gap: 8px;">
-            <button id="undoBtn" class="btn-secondary" style="flex: 1;" disabled>⟲ Undo</button>
-            <button id="redoBtn" class="btn-secondary" style="flex: 1;" disabled>⟳ Redo</button>
-        </div>
-    </div>
-    <div class="divider"></div>
+            <button id="undoBtn" class="btn-secondary" style="flex: 1;" disabled>⟲ Undo<button>
+            <button id="redoBtn" class="btn-secondary" style="flex: 1;" disabled>⟳ Redo<button>
+        <div>
+    <div>
+    <div class="divider"><div>
     <div class="control-group">
-        <h2>Export System</h2>
+        <h2>Export System<h2>
         <select id="exportFormat">
-            <option value="pdf">All Files as PDF</option>
-            <option value="png">Active File as PNG</option>
-        </select>
-        <button id="downloadBtn" class="btn-primary">Download File</button>
-    </div>
-</div>
+            <option value="pdf">All Files as PDF<option>
+            <option value="png">Active File as PNG<option>
+        <select>
+        <button id="downloadBtn" class="btn-primary">Download File<button>
+    <div>
+<div>
 
 <div class="main-area">
     <div class="workspace" id="workspace">
-        <div id="noFileText" style="color: #94a3b8;">No document selected.</div>
+        <div id="noFileText" style="color: #94a3b8;">No document selected.<div>
         <div class="image-wrapper" id="imageWrapper" style="display: none;">
             <img id="mainImage" src="" alt="Workspace">
-        </div>
-    </div>
-</div>
+        <div>
+    <div>
+<div>
 
 <div class="right-sidebar">
-    <h2>Directory</h2>
-    <div class="file-list" id="fileList"></div>
-</div>
-<canvas id="hiddenCanvas" style="display: none;"></canvas>
+    <h2>Directory<h2>
+    <div class="file-list" id="fileList"><div>
+<div>
+<canvas id="hiddenCanvas" style="display: none;"><canvas>
 
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
