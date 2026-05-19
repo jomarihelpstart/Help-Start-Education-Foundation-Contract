@@ -79,32 +79,13 @@
         .dot { width: 6px; height: 6px; background-color: #059669; border-radius: 50%; }
         .live-status.offline .dot { background-color: #d97706; }
         .divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
-    </@media (max-width: 768px) {
-  /* Siguraduhing may espasyo sa gilid para hindi sagad sa screen */
-  body {
-    padding: 10px;
-    margin: 0;
-  }
-  
-  /* Gawing pababa ang pwesto ng mga kahon imbes na tabi-tabi */
-  .container, #workspace-container {
-    flex-direction: column !important;
-    width: 100% !important;
-  }
-  
-  /* Palakihin ang mga input box at buttons para madaling ma-tap ng daliri */
-  input, button {
-    width: 100% !important;
-    padding: 12px !important;
-    margin-bottom: 10px !important;
-    box-sizing: border-box;
-    font-size: 16px; /* Para hindi mag-auto zoom ang iPhone kapag nag-type */
-  }
-
-  /* I-adjust din ang login screen na ginawa natin kanina */
-  #login-screen input {
-    width: 90% !important;
-  }
+    @media (max-width: 768px) {
+        body { padding: 10px; margin: 0; }
+        .container, #workspace-container { flex-direction: column !important; width: 100% !important; }
+        input, button { width: 100% !important; padding: 12px !important; margin-bottom: 10px !important; box-sizing: border-box; font-size: 16px; }
+        #login-screen input { width: 90% !important; }
+    }
+</style>
 }>
 </<meta name="viewport" content="width=device-width, initial-scale=1.0">>
 <body>
@@ -563,24 +544,33 @@
             const img = new Image();
             img.onload = () => {
                 const ctx = hiddenCanvas.getContext('2d');
-                hiddenCanvas.width = img.naturalWidth; hiddenCanvas.height = img.naturalHeight;
+                // I-set ang canvas size base sa original image dimensions
+                hiddenCanvas.width = img.naturalWidth; 
+                hiddenCanvas.height = img.naturalHeight;
                 ctx.drawImage(img, 0, 0);
-                const dispW = mainImage.clientWidth || 500; const scaleX = img.naturalWidth / dispW;
+
+                // Kalkulahin ang scale para sa text placement
+                const dispW = mainImage.clientWidth || 500; 
+                const scaleX = img.naturalWidth / dispW;
                 const scaleY = img.naturalHeight / (mainImage.clientHeight || 500);
 
+                // I-draw ang bawat text overlay sa canvas
                 file.texts.forEach(textData => {
-                    if (textData.content.trim() === '' || textData.content === 'Input text...') return;
-                    const boxFSize = parseFloat(textData.fontSize);
-                    const targetX = (parseFloat(textData.left) + 8) * scaleX;
-                    const targetY = (parseFloat(textData.top) + (boxFSize * 0.8) + 4) * scaleY;
-                    if (textData.user) {
-                        ctx.font = `600 ${12 * scaleX}px 'Inter', Arial`; ctx.fillStyle = '#64748b';
-                        ctx.fillText(`[${textData.user}]`, targetX, targetY - (14 * scaleY));
+                    if (textData.content) {
+                        ctx.fillStyle = textData.color;
+                        // I-adjust ang font size base sa scale
+                        const fontSize = parseInt(textData.fontSize) || 16;
+                        ctx.font = `${fontSize * scaleX}px Inter, sans-serif`;
+                        
+                        const x = parseFloat(textData.left) * scaleX;
+                        // I-adjust ang y position para sa text baseline
+                        const y = (parseFloat(textData.top) + fontSize) * scaleY;
+                        
+                        ctx.fillText(textData.content, x, y);
                     }
-                    ctx.font = `600 ${boxFSize * scaleX}px 'Inter', Arial`; ctx.fillStyle = textData.color;
-                    ctx.textBaseline = 'alphabetic'; ctx.fillText(textData.content, targetX, targetY);
                 });
-                resolve(hiddenCanvas.toDataURL(mimeType, mimeType === 'image/jpeg' ? 0.95 : undefined));
+                
+                resolve(hiddenCanvas.toDataURL(mimeType, 0.92));
             };
             img.src = file.src;
         });
