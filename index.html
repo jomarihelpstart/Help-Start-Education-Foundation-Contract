@@ -45,8 +45,8 @@
         .badge { background: #e0f2fe; color: #0284c7; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
         
         hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
-    </style>
-</head>
+    <style>
+<head>
 <body>
 
 <div class="sidebar">
@@ -72,30 +72,29 @@
         <h3>3. Export File</h3>
         <div class="input-group">
             <select id="exportFormat">
-                <option value="png">PNG Image</option>
-                <option value="jpeg">JPEG Image</option>
-                <option value="pdf">PDF Document</option>
-            </select>
-        </div>
-        <button class="btn" id="downloadBtn" style="width: 100%;">Download Now</button>
-    </div>
-</div>
+                <option value="png">PNG Image<option>
+                <option value="jpeg">JPEG Image<option>
+                <option value="pdf">PDF Document<option>
+            <select>
+        <div>
+        <button class="btn" id="downloadBtn" style="width: 100%;">Download Now<button>
+    <div>
+<div>
 
-<div class="main-area">
-    <div class="workspace" id="workspace">
-        <h2 id="noFileText" style="color: #94a3b8; font-weight: 400;">Upload or select a file to start editing</h2>
+div class="main-area"
+    div class="workspace" id="workspace"
+        h2 id="noFileText" style="color: #94a3b8; font-weight: 400;">Upload or select a file to start editing h2
         
-        <div class="image-container" id="imageContainer">
-            <img id="mainImage" src="" alt="Working Document">
-        </div>
-    </div>
-</div>
-
-<div class="right-sidebar">
-    <h3>Project Directory</h3>
-    <div id="directoryList">
-        </div>
-</div>
+        div class="image-container" id="imageContainer"
+            img id="mainImage" src="" alt="Working Document"
+        div
+    div
+div
+div class="right-sidebar"
+    h3 Project Directory h3
+    div id="directoryList"
+        div
+div
 
 <script>
     // --- STATE MANAGEMENT ---
