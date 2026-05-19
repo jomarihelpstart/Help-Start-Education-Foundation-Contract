@@ -1,161 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Collaborative Editor<title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"><script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><script>
+    <title>Collaborative Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; background-color: #f8fafc; display: flex; height: 100vh; overflow: hidden; color: #334155; }
-        
-        .file-editor { font-size: 10px; font-weight: 500; margin-top: 2px; color: #2563eb; display: block; }
-        
-        .left-sidebar { width: 320px; background-color: #ffffff; padding: 24px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 24px; z-index: 10; overflow-y: auto; }
-        .right-sidebar { width: 280px; background-color: #ffffff; padding: 24px; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
-        .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .workspace { flex: 1; padding: 40px; display: flex; justify-content: center; align-items: flex-start; overflow: auto; background-color: #f1f5f9; }
-        
-        .image-wrapper { position: relative; display: inline-block; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); background-color: white; line-height: 0; cursor: crosshair; border-radius: 4px; border: 1px solid #cbd5e1; }
-        .image-wrapper img { max-width: 100%; height: auto; display: block; pointer-events: none; user-select: none; border-radius: 3px; }
-        
-        .text-overlay { position: absolute; padding: 4px 8px; font-family: 'Inter', Arial, sans-serif; font-weight: 600; line-height: 1.2; background: transparent; border: 1px dashed transparent; cursor: move; min-width: 30px; outline: none; border-radius: 4px; user-select: none; transition: border 0.2s; }
-        .text-overlay:hover { border: 1px dashed #94a3b8; }
-        .text-overlay:focus { background: rgba(255, 255, 255, 0.9); border: 1px solid #2563eb; cursor: text; user-select: text; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-
-        .user-badge { position: absolute; top: -20px; left: -1px; padding: 2px 6px; background-color: #2563eb; color: white; border-radius: 3px; font-size: 11px; font-weight: 600; pointer-events: none; user-select: none; letter-spacing: 0.05em; }
-
-        h2 { margin-top: 0; color: #0f172a; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
-        
-        .control-group { display: flex; flex-direction: column; gap: 8px; }
-        label { display: block; font-weight: 500; font-size: 13px; color: #475569; }
-        
-        input[type="file"], input[type="color"], input[type="number"], input[type="text"], select { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; font-size: 13px; color: #0f172a; outline: none; transition: all 0.2s; background-color: #ffffff; }
-        button { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; outline: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-primary { background-color: #2563eb; color: white; border: 1px solid transparent; width: 100%; padding: 12px; font-size: 14px; margin-top: 4px; }
-        .btn-secondary { background-color: #ffffff; color: #334155; border: 1px solid #cbd5e1; }
-        
-        .file-list { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; flex: 1; }
-        .folder-header { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; margin: 16px 0 4px 0; display: flex; align-items: center; gap: 6px; }
-        .file-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .file-item:hover { background-color: #f8fafc; }
-        .file-item.active { background-color: #eff6ff; border-color: #bfdbfe; }
-        .file-info { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-        .file-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; color: #334155; }
-        .file-date { font-size: 11px; color: #94a3b8; font-weight: 400; }
-        .file-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
-        .file-item:hover .file-actions { opacity: 1; }
-        .btn-action-sm { border: none; background: transparent; color: #64748b; width: 24px; height: 24px; cursor: pointer; }
-        
-        .live-status { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: #059669; margin-bottom: 8px; background: #ecfdf5; padding: 8px 12px; border-radius: 6px; border: 1px solid #a7f3d0; }
-        .live-status.offline { color: #d97706; background: #fef3c7; border-color: #fde68a; }
-        .dot { width: 6px; height: 6px; background-color: #059669; border-radius: 50%; }
-        .live-status.offline .dot { background-color: #d97706; }
-        .divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
-    <style>
-<head>
+        /* [GAMITIN MO DITO ANG MGA CSS MO DATI PARA HINDI MABAGO ANG DESIGN] */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f0f2f5; display: flex; height: 100vh; overflow: hidden; }
+        .left-sidebar { width: 280px; background: white; padding: 20px; overflow-y: auto; border-right: 1px solid #ccc; }
+        .main-area { flex: 1; display: flex; justify-content: center; align-items: flex-start; overflow: auto; background: #e9ecef; }
+        .right-sidebar { width: 300px; background: white; padding: 20px; border-left: 1px solid #ccc; }
+        .image-wrapper { position: relative; display: inline-block; background: white; cursor: crosshair; }
+        .image-wrapper img { display: block; pointer-events: none; }
+        .text-overlay { position: absolute; padding: 4px; border: 1px dashed red; cursor: move; }
+        /* [DAGDAG PA DITO ANG IBA MONG CSS] */
+    </style>
+</head>
 <body>
 
 <div class="left-sidebar">
-    <div id="statusIndicator" class="live-status offline"><div class="dot"><div> Local Mode (Offline)<div>
-    <div class="control-group">
-        <h2>Active User<h2>
-        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <select id="activeUser" style="flex: 1;"><option value="Jomari">Jomari<option><select>
-            <button id="editUserBtn" class="btn-secondary">✎<button>
-            <button id="deleteUserBtn" class="btn-secondary">✕<button>
-        <div>
-        <div style="display: flex; gap: 8px;">
-            <input type="text" id="newUserName" placeholder="Add team member...">
-            <button id="addUserBtn" class="btn-secondary">Add<button>
-        <div>
-    <div>
-    <div class="divider"><div>
-    <div class="control-group">
-        <h2>Document Upload<h2>
-        <input type="text" id="folderInput" value="General Files">
-        <input type="file" id="imageInput" accept="image/png, image/jpeg, application/pdf" multiple>
-    <div>
-    <div class="divider"><div>
-    <div class="control-group">
-        <h2>Formatting<h2>
-        <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;"><label>Color<label><input type="color" id="colorInput" value="#dc2626"><div>
-            <div style="flex: 1;"><label>Size<label><input type="number" id="sizeInput" value="18"><div>
-        <div>
-    <div>
-    <div class="divider"><div>
-    <div class="control-group">
-        <h2>History</h2>
-        <div style="display: flex; gap: 8px;">
-            <button id="undoBtn" class="btn-secondary" style="flex: 1;" disabled>⟲ Undo<button>
-            <button id="redoBtn" class="btn-secondary" style="flex: 1;" disabled>⟳ Redo<button>
-        <div>
-    <div>
-    <div class="divider"><div>
-    <div class="control-group">
-        <h2>Export System<h2>
-        <select id="exportFormat">
-            <option value="pdf">All Files as PDF<option>
-            <option value="png">Active File as PNG<option>
-        <select>
-        <button id="downloadBtn" class="btn-primary">Download File<button>
-    <div>
-<div>
+    <h2>Toolbar</h2>
+    <input type="file" id="imageInput" multiple>
+    <button id="downloadBtn">I-download PDF</button>
+</div>
 
 <div class="main-area">
     <div class="workspace" id="workspace">
-        <div id="noFileText" style="color: #94a3b8;">No document selected.<div>
         <div class="image-wrapper" id="imageWrapper" style="display: none;">
-            <img id="mainImage" src="" alt="Workspace">
-        <div>
-    <div>
-<div>
+            <img id="mainImage" src="">
+        </div>
+    </div>
+</div>
 
 <div class="right-sidebar">
-    <h2>Directory<h2>
-    <div class="file-list" id="fileList"><div>
-<div>
-<canvas id="hiddenCanvas" style="display: none;"><canvas>
+    <h2>Files</h2>
+    <div id="fileList"></div>
+</div>
 
 <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    // --- SUPABASE CONFIGURATION ---
+    const SUPABASE_URL = "https://iqmjdlzxtpqbsfolnmzt.supabase.co"; 
+    const SUPABASE_ANON_KEY = "sb_publishable_VSag97uggtdGwBlZvXuPbw_jTCNeDPc";
     
-    // [INITIALIZE VARIABLES HERE SAME AS YOUR PREVIOUS CODE]
-    // (Preserve your existing variables from before...)
-    let filesArray = []; let activeFileId = null;
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const channel = supabase.channel('editor-sync');
 
-    // ... [KEEP ALL YOUR FUNCTIONS: recordAction, switchToFile, etc.] ...
+    // --- VARIABLES ---
+    let filesArray = []; 
+    let activeFileId = null;
 
-    // FIX PARA SA EXPORT (Ito yung kulang na function)
-    async function renderFileWithTextsToDataUrl(file, mimeType = 'image/jpeg') {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.getElementById('hiddenCanvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
-                ctx.drawImage(img, 0, 0);
+    // --- SUPABASE SYNC LOGIC ---
+    channel.on('broadcast', { event: 'sync-data' }, (payload) => {
+        filesArray = payload.data;
+        renderFileList();
+        if(activeFileId) renderTextsFromActiveFile();
+    }).subscribe();
 
-                // Draw texts
-                file.texts.forEach(t => {
-                    ctx.fillStyle = t.color;
-                    const size = parseInt(t.fontSize) || 18;
-                    ctx.font = `${size}px Inter, sans-serif`;
-                    // Note: Coordinates might need scaling if wrapper size differs from natural size
-                    ctx.fillText(t.content, parseInt(t.left), parseInt(t.top) + size);
-                });
-                resolve(canvas.toDataURL(mimeType));
-            };
-            img.src = file.src;
+    function pushToCloud() {
+        channel.send({
+            type: 'broadcast',
+            event: 'sync-data',
+            data: filesArray
         });
     }
 
-    // ... [REST OF YOUR EVENT LISTENERS] ...
+    // --- DITO ILAGAY YUNG MGA FUNCTIONS MO DATI (imageInput, render, etc.) ---
+    // [ILAGAY DITO YUNG MGA FUNCTION MO: renderFileList, createTextBoxElement, etc.]
+
+    // [IMPORTANTE: Sa dulo ng mga function na nagbabago ng data (tulad ng recordAction o deleteFile),
+    // Tawagin mo ang: pushToCloud();]
+    
+    function recordAction() {
+        // ... (yung existing code mo para mag-save)
+        pushToCloud(); // <--- IDAGDAG MO ITO TUWING MAY PAGBABAGO
+    }
+
+    // [ILAGAY DITO YUNG IBA MO PANG FUNCTIONS]
+
 </script>
 </body>
 </html>
