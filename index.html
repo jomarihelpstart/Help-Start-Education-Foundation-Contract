@@ -79,102 +79,102 @@
         .dot { width: 6px; height: 6px; background-color: #059669; border-radius: 50%; }
         .live-status.offline .dot { background-color: #d97706; }
         .divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
-    <style>
-<head>
+    </style>
+</head>
 <body>
 
 <div class="left-sidebar">
     <div>
-        <div id="statusIndicator" class="live-status offline"><div class="dot"><div> Local Mode (Offline)<div>
-    <div>
+        <div id="statusIndicator" class="live-status offline"><div class="dot"></div> Local Mode (Offline)</div>
+    </div>
 
     <div class="control-group">
-        <h2>Active User<h2>
+        <h2>Active User</h2>
         <div style="display: flex; gap: 8px; margin-bottom: 8px;">
             <select id="activeUser" style="flex: 1; margin-bottom: 0;">
-                <option value="Jomari">Jomari<option>
-            <select>
-            <button id="editUserBtn" class="btn-secondary" style="padding: 0 12px;" title="Rename">✎<button>
-            <button id="deleteUserBtn" class="btn-secondary" style="padding: 0 12px;" title="Delete">✕<button>
-        <div>
+                <option value="Jomari">Jomari</option>
+            </select>
+            <button id="editUserBtn" class="btn-secondary" style="padding: 0 12px;" title="Rename">✎</button>
+            <button id="deleteUserBtn" class="btn-secondary" style="padding: 0 12px;" title="Delete">✕</button>
+        </div>
         <div style="display: flex; gap: 8px;">
             <input type="text" id="newUserName" placeholder="Add team member..." style="margin-bottom: 0;">
-            <button id="addUserBtn" class="btn-secondary" style="padding: 0 16px;">Add<button>
-        <div>
-    <div>
+            <button id="addUserBtn" class="btn-secondary" style="padding: 0 16px;">Add</button>
+        </div>
+    </div>
 
-    <div class="divider"><div>
+    <div class="divider"></div>
 
     <div class="control-group">
-        <h2>Document Upload<h2>
-        <label style="font-size: 11px; margin-bottom: -4px;">Target Folder<label>
+        <h2>Document Upload</h2>
+        <label style="font-size: 11px; margin-bottom: -4px;">Target Folder</label>
         <input type="text" id="folderInput" placeholder="e.g. Invoices, Reports..." value="General Files">
         <!-- INAYOS: Tinatanggap na ngayon pati .pdf files -->
         <input type="file" id="imageInput" accept="image/png, image/jpeg, image/jpg, application/pdf" multiple style="margin-top: 8px;">
-    <div>
+    </div>
 
-    <div class="divider"><div>
+    <div class="divider"></div>
 
     <div class="control-group">
-        <h2>Formatting<h2>
+        <h2>Formatting</h2>
         <div style="display: flex; gap: 12px;">
             <div style="flex: 1;">
-                <label>Text Color<label>
+                <label>Text Color</label>
                 <input type="color" id="colorInput" value="#dc2626" style="height: 36px; padding: 2px; cursor: pointer;">
-            <div>
+            </div>
             <div style="flex: 1;">
-                <label>Font Size<label>
+                <label>Font Size</label>
                 <input type="number" id="sizeInput" value="18" min="12" max="100">
-            <div>
-        <div>
-    <div>
+            </div>
+        </div>
+    </div>
 
-    <div class="divider"><div>
+    <div class="divider"></div>
 
     <div class="control-group">
-        <h2>History<h2>
+        <h2>History</h2>
         <div style="display: flex; gap: 8px;">
-            <button id="undoBtn" class="btn-secondary" style="flex: 1;" disabled>⟲ Undo<button>
-            <button id="redoBtn" class="btn-secondary" style="flex: 1;" disabled>⟳ Redo<button>
-        <div>
-    <div>
+            <button id="undoBtn" class="btn-secondary" style="flex: 1;" disabled>⟲ Undo</button>
+            <button id="redoBtn" class="btn-secondary" style="flex: 1;" disabled>⟳ Redo</button>
+        </div>
+    </div>
 
-    <div class="divider"><div>
+    <div class="divider"></div>
 
     <div class="control-group">
         <h2>Export System</h2>
-        <label>Format<label>
+        <label>Format</label>
         <select id="exportFormat">
-            <option value="pdf">All Files as PDF<option>
-            <option value="png">Active File as PNG (.png)<option>
-            <option value="jpeg">Active File as JPEG (.jpg)<option>
-        <select>
+            <option value="pdf">All Files as PDF</option>
+            <option value="png">Active File as PNG (.png)</option>
+            <option value="jpeg">Active File as JPEG (.jpg)</option>
+        </select>
         <button id="downloadBtn" class="btn-primary">Download File</button>
-    <div>
-<div>
+    </div>
+</div>
 
 <div class="main-area">
     <div class="workspace" id="workspace">
         <div id="noFileText" style="color: #94a3b8; text-align: center;">
-            <p style="font-size: 14px; font-weight: 500;">No document selected.<p>
-            <p style="font-size: 13px; margin-top: 4px;">Upload an Image or PDF file from the sidebar to begin editing.<p>
-        <div>
+            <p style="font-size: 14px; font-weight: 500;">No document selected.</p>
+            <p style="font-size: 13px; margin-top: 4px;">Upload an Image or PDF file from the sidebar to begin editing.</p>
+        </div>
         
         <div class="image-wrapper" id="imageWrapper" style="display: none;">
             <img id="mainImage" src="" alt="Active Workspace File">
-        <div>
+        </div>
     </div>
-<div>
+</div>
 
 <div class="right-sidebar">
     <h2>Directory</h2>
     <div class="file-list" id="fileList">
-        <div style="color: #94a3b8; font-size: 13px; text-align: center; margin-top: 20px;">Directory empty.<div>
-    <div>
-<div>
+        <div style="color: #94a3b8; font-size: 13px; text-align: center; margin-top: 20px;">Directory empty.</div>
+    </div>
+</div>
 
 <!-- Gagamitin ito para sa rendering ng PDF at export drawing -->
-<canvas id="hiddenCanvas" style="display: none;"><canvas>
+<canvas id="hiddenCanvas" style="display: none;"></canvas>
 
 <script>
     // I-setup ang PDF.js worker URL para gumana sa browser background
@@ -559,6 +559,6 @@
             img.src = file.src;
         });
     }
-<script>
-<body>
-<html>
+</script>
+</body>
+</html>
