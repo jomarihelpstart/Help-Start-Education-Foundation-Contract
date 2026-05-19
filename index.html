@@ -3,562 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Help Start Education Foundation Contract <title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><script>
-    <!-- DAGDAG: PDF.js library para sa pag-convert ng PDF to Image -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"><script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Professional Workspace & Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
     <style>
-        /* Modern Corporate Font */
+        /* --- PROFESSIONAL STYLING --- */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
-        body { 
-            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
-            margin: 0; 
-            background-color: #f8fafc; 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
-            color: #334155; 
-        }
         
-        .left-sidebar { width: 320px; background-color: #ffffff; padding: 24px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 24px; z-index: 10; overflow-y: auto; }
-        .right-sidebar { width: 280px; background-color: #ffffff; padding: 24px; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
-        .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .workspace { flex: 1; padding: 40px; display: flex; justify-content: center; align-items: flex-start; overflow: auto; background-color: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; margin: 0; display: flex; height: 100vh; background-color: #f8fafc; color: #1e293b; overflow: hidden; }
         
-        .image-wrapper { position: relative; display: inline-block; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); background-color: white; line-height: 0; cursor: crosshair; border-radius: 4px; border: 1px solid #cbd5e1; }
-        .image-wrapper img { max-width: 100%; height: auto; display: block; pointer-events: none; user-select: none; border-radius: 3px; }
+        /* Sidebars */
+        .sidebar { width: 320px; background: #ffffff; padding: 24px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 24px; box-shadow: 2px 0 10px rgba(0,0,0,0.02); z-index: 10; }
+        .right-sidebar { width: 320px; background: #ffffff; padding: 24px; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow-y: auto; box-shadow: -2px 0 10px rgba(0,0,0,0.02); z-index: 10; }
         
-        .text-overlay { position: absolute; padding: 4px 8px; font-family: 'Inter', Arial, sans-serif; font-weight: 600; line-height: 1.2; background: transparent; border: 1px dashed transparent; cursor: move; min-width: 30px; outline: none; border-radius: 4px; user-select: none; transition: border 0.2s; }
-        .text-overlay:hover { border: 1px dashed #94a3b8; }
-        .text-overlay:focus { background: rgba(255, 255, 255, 0.9); border: 1px solid #2563eb; cursor: text; user-select: text; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-
-        .user-badge { position: absolute; top: -20px; left: -1px; padding: 2px 6px; background-color: #2563eb; color: white; border-radius: 3px; font-size: 11px; font-weight: 600; pointer-events: none; user-select: none; letter-spacing: 0.05em; }
-
-        h2 { margin-top: 0; color: #0f172a; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+        /* Workspace */
+        .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; background-image: radial-gradient(#cbd5e1 1px, transparent 0); background-size: 20px 20px; }
+        .workspace { flex: 1; padding: 40px; display: flex; justify-content: center; align-items: flex-start; overflow: auto; }
         
-        .control-group { display: flex; flex-direction: column; gap: 8px; }
-        label { display: block; font-weight: 500; font-size: 13px; color: #475569; }
+        /* Image & Text Editor */
+        .image-container { position: relative; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); background: white; border-radius: 4px; border: 1px solid #cbd5e1; display: none; }
+        .image-container img { max-width: 100%; display: block; border-radius: 4px; }
+        .text-overlay { position: absolute; padding: 4px 8px; font-weight: 600; color: #0f172a; cursor: move; border: 1px dashed transparent; min-width: 50px; background: transparent; }
+        .text-overlay:focus { outline: none; background: rgba(255, 255, 255, 0.9); border: 1px dashed #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
         
-        input[type="file"], input[type="color"], input[type="number"], input[type="text"], select { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; font-size: 13px; color: #0f172a; outline: none; transition: all 0.2s; background-color: #ffffff; }
-        input[type="text"]:focus, select:focus, input[type="number"]:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        input[type="file"] { padding: 6px; font-size: 12px; cursor: pointer; }
+        /* Controls & Inputs */
+        h3 { font-size: 14px; text-transform: uppercase; color: #64748b; margin: 0 0 12px 0; letter-spacing: 0.5px; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
+        input[type="text"], select, input[type="file"] { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; }
+        .btn { padding: 10px 16px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+        .btn.outline { background: transparent; border: 1px solid #2563eb; color: #2563eb; }
+        .btn.outline:hover { background: #eff6ff; }
         
-        button { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; outline: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-primary { background-color: #2563eb; color: white; border: 1px solid transparent; box-shadow: 0 1px 2px rgba(0,0,0,0.05); width: 100%; padding: 12px; font-size: 14px; margin-top: 4px; }
-        .btn-primary:hover { background-color: #1d4ed8; }
-        .btn-secondary { background-color: #ffffff; color: #334155; border: 1px solid #cbd5e1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .btn-secondary:hover:not(:disabled) { background-color: #f8fafc; border-color: #94a3b8; }
-        .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; background-color: #f1f5f9; box-shadow: none; }
-
-        /* DIRECTORY & FOLDER STYLES */
-        .file-list { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; flex: 1; }
+        /* Folder Directory */
+        .folder-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+        .folder-item:hover { border-color: #94a3b8; transform: translateY(-1px); }
+        .folder-item.active { background: #eff6ff; border-color: #3b82f6; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1); }
+        .folder-name { font-weight: 600; font-size: 14px; color: #0f172a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .folder-meta { font-size: 12px; color: #64748b; display: flex; flex-direction: column; gap: 4px; }
+        .badge { background: #e0f2fe; color: #0284c7; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
         
-        .folder-header { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; margin: 16px 0 4px 0; display: flex; align-items: center; gap: 6px; letter-spacing: 0.05em; }
-        .folder-icon { font-size: 14px; }
-        
-        .file-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .file-item:hover { background-color: #f8fafc; }
-        .file-item.active { background-color: #eff6ff; border-color: #bfdbfe; }
-        
-        .file-info { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-        .file-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; color: #334155; }
-        .file-date { font-size: 11px; color: #94a3b8; font-weight: 400; }
-        .file-item.active .file-name { color: #1d4ed8; }
-        .file-item.active .file-date { color: #60a5fa; }
-        
-        .file-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
-        .file-item:hover .file-actions { opacity: 1; }
-        .btn-action-sm { border: none; background: transparent; color: #64748b; width: 24px; height: 24px; padding: 0; font-size: 14px; border-radius: 4px; cursor: pointer; }
-        .btn-action-sm:hover { background-color: #e2e8f0; color: #0f172a; }
-        .btn-action-sm.delete:hover { color: #dc2626; background-color: #fee2e2; }
-        
-        .live-status { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: #059669; margin-bottom: 8px; background: #ecfdf5; padding: 8px 12px; border-radius: 6px; border: 1px solid #a7f3d0; }
-        .live-status.offline { color: #d97706; background: #fef3c7; border-color: #fde68a; }
-        .dot { width: 6px; height: 6px; background-color: #059669; border-radius: 50%; }
-        .live-status.offline .dot { background-color: #d97706; }
-        .divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
-    <style>
-<head>
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+    </style>
+</head>
 <body>
 
-<div class="left-sidebar">
+<div class="sidebar">
     <div>
-        <div id="statusIndicator" class="live-status offline"><div class="dot"><div> Local Mode (Offline)</div>
-    <div>
-
-    <div class="control-group">
-        <h2>Active User</h2>
-        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <select id="activeUser" style="flex: 1; margin-bottom: 0;">
+        <h3>1. Active Editor</h3>
+        <div class="input-group">
+            <select id="editorSelect">
                 <option value="Jomari">Jomari</option>
             </select>
-            <button id="editUserBtn" class="btn-secondary" style="padding: 0 12px;" title="Rename">✎</button>
-            <button id="deleteUserBtn" class="btn-secondary" style="padding: 0 12px;" title="Delete">✕</button>
-        <div>
-        <div style="display: flex; gap: 8px;">
-            <input type="text" id="newUserName" placeholder="Add team member..." style="margin-bottom: 0;">
-            <button id="addUserBtn" class="btn-secondary" style="padding: 0 16px;">Add</button>
+        </div>
+        <div class="input-group">
+            <input type="text" id="newEditorInput" placeholder="Add new name...">
+            <button class="btn outline" id="addEditorBtn">Add</button>
         </div>
     </div>
-
-    <div class="divider"></div>
-
-    <div class="control-group">
-        <h2>Document Upload</h2>
-        <label style="font-size: 11px; margin-bottom: -4px;">Target Folder</label>
-        <input type="text" id="folderInput" placeholder="e.g. Invoices, Reports..." value="General Files">
-        <!-- INAYOS: Tinatanggap na ngayon pati .pdf files -->
-        <input type="file" id="imageInput" accept="image/png, image/jpeg, image/jpg, application/pdf" multiple style="margin-top: 8px;">
+    <hr>
+    <div>
+        <h3>2. Upload Document</h3>
+        <input type="file" id="fileUpload" accept="image/png, image/jpeg">
     </div>
-
-    <div class="divider"></div>
-
-    <div class="control-group">
-        <h2>Formatting</h2>
-        <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;">
-                <label>Text Color</label>
-                <input type="color" id="colorInput" value="#dc2626" style="height: 36px; padding: 2px; cursor: pointer;">
-            </div>
-            <div style="flex: 1;">
-                <label>Font Size</label>
-                <input type="number" id="sizeInput" value="18" min="12" max="100">
-            </div>
+    <hr>
+    <div>
+        <h3>3. Export File</h3>
+        <div class="input-group">
+            <select id="exportFormat">
+                <option value="png">PNG Image</option>
+                <option value="jpeg">JPEG Image</option>
+                <option value="pdf">PDF Document</option>
+            </select>
         </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="control-group">
-        <h2>History</h2>
-        <div style="display: flex; gap: 8px;">
-            <button id="undoBtn" class="btn-secondary" style="flex: 1;" disabled>⟲ Undo</button>
-            <button id="redoBtn" class="btn-secondary" style="flex: 1;" disabled>⟳ Redo</button>
-        </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="control-group">
-        <h2>Export System</h2>
-        <label>Format</label>
-        <select id="exportFormat">
-            <option value="pdf">All Files as PDF</option>
-            <option value="png">Active File as PNG (.png)</option>
-            <option value="jpeg">Active File as JPEG (.jpg)</option>
-        </select>
-        <button id="downloadBtn" class="btn-primary">Download File</button>
+        <button class="btn" id="downloadBtn" style="width: 100%;">Download Now</button>
     </div>
 </div>
 
 <div class="main-area">
     <div class="workspace" id="workspace">
-        <div id="noFileText" style="color: #94a3b8; text-align: center;">
-            <p style="font-size: 14px; font-weight: 500;">No document selected.</p>
-            <p style="font-size: 13px; margin-top: 4px;">Upload an Image or PDF file from the sidebar to begin editing.</p>
-        </div>
+        <h2 id="noFileText" style="color: #94a3b8; font-weight: 400;">Upload or select a file to start editing</h2>
         
-        <div class="image-wrapper" id="imageWrapper" style="display: none;">
-            <img id="mainImage" src="" alt="Active Workspace File">
+        <div class="image-container" id="imageContainer">
+            <img id="mainImage" src="" alt="Working Document">
         </div>
     </div>
 </div>
 
 <div class="right-sidebar">
-    <h2>Directory</h2>
-    <div class="file-list" id="fileList">
-        <div style="color: #94a3b8; font-size: 13px; text-align: center; margin-top: 20px;">Directory empty.</div>
-    </div>
+    <h3>Project Directory</h3>
+    <div id="directoryList">
+        </div>
 </div>
 
-<!-- Gagamitin ito para sa rendering ng PDF at export drawing -->
-<canvas id="hiddenCanvas" style="display: none;"></canvas>
-
 <script>
-    // I-setup ang PDF.js worker URL para gumana sa browser background
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    // --- STATE MANAGEMENT ---
+    let filesData = [];
+    let activeFileId = null;
 
-    const imageInput = document.getElementById('imageInput');
-    const folderInput = document.getElementById('folderInput');
-    const imageWrapper = document.getElementById('imageWrapper');
+    // --- ELEMENTS ---
+    const editorSelect = document.getElementById('editorSelect');
+    const newEditorInput = document.getElementById('newEditorInput');
+    const addEditorBtn = document.getElementById('addEditorBtn');
+    const fileUpload = document.getElementById('fileUpload');
+    const directoryList = document.getElementById('directoryList');
+    const imageContainer = document.getElementById('imageContainer');
     const mainImage = document.getElementById('mainImage');
     const noFileText = document.getElementById('noFileText');
-    const fileListContainer = document.getElementById('fileList');
-    const colorInput = document.getElementById('colorInput');
-    const sizeInput = document.getElementById('sizeInput');
-    const activeUserSelect = document.getElementById('activeUser');
-    const newUserNameInput = document.getElementById('newUserName');
-    const addUserBtn = document.getElementById('addUserBtn');
-    const editUserBtn = document.getElementById('editUserBtn');
-    const deleteUserBtn = document.getElementById('deleteUserBtn');
-    const undoBtn = document.getElementById('undoBtn');
-    const redoBtn = document.getElementById('redoBtn');
-    const hiddenCanvas = document.getElementById('hiddenCanvas');
-    const statusIndicator = document.getElementById('statusIndicator');
-    const exportFormat = document.getElementById('exportFormat');
     const downloadBtn = document.getElementById('downloadBtn');
-    
-    let filesArray = []; 
-    let activeFileId = null;
-    let isIncomingSync = false; 
+    const exportFormat = document.getElementById('exportFormat');
 
-    // --- SUPABASE FAIL-SAFE CONFIG ---
-    let appChannel = null;
-    try {
-        const SUPABASE_URL = "https://iqmjdlzxtpqbsfolnmzt.supabase.co"; 
-        const SUPABASE_ANON_KEY = "sb_publishable_VSag97uggtdGwBlZvXuPbw_jTCNeDPc";
-        
-        if (SUPABASE_URL !== "https://iqmjdlzxtpqbsfolnmzt.supabase.co" && SUPABASE_URL.startsWith("http")) {
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            appChannel = supabaseClient.channel('room-1', { config: { broadcast: { self: false } } });
-            appChannel.on('broadcast', { event: 'sync-state' }, (p) => handleIncomingNetworkSync(p.payload)).subscribe((status) => {
-                if (status === 'SUBSCRIBED') {
-                    statusIndicator.className = 'live-status';
-                    statusIndicator.innerHTML = '<div class="dot"><div> System Synced Online';
-                }
-            });
+    // --- 1. ADD NEW EDITOR ---
+    addEditorBtn.addEventListener('click', () => {
+        const newName = newEditorInput.value.trim();
+        if (newName) {
+            const option = document.createElement('option');
+            option.value = newName;
+            option.textContent = newName;
+            editorSelect.appendChild(option);
+            editorSelect.value = newName; // Auto-select yung bagong add
+            newEditorInput.value = '';
         }
-    } catch (error) { console.warn("Supabase local bypass active.", error); }
-
-    function broadcastStateToTeammates() {
-        if (isIncomingSync || !appChannel) return; 
-        saveCurrentTextsState();
-        appChannel.send({ type: 'broadcast', event: 'sync-state', payload: { filesArray: filesArray, activeFileId: activeFileId } });
-    }
-
-    function handleIncomingNetworkSync(data) {
-        isIncomingSync = true; filesArray = data.filesArray; renderFileList();
-        if (data.activeFileId !== activeFileId) { switchToFile(data.activeFileId, true); } 
-        else if (activeFileId !== null) { renderTextsFromActiveFile(); }
-        isIncomingSync = false;
-    }
-
-    // USER CONTROLS
-    addUserBtn.addEventListener('click', () => {
-        const newName = newUserNameInput.value.trim(); if (newName === "") return;
-        let exists = false;
-        for (let i = 0; i < activeUserSelect.options.length; i++) {
-            if (activeUserSelect.options[i].value.toLowerCase() === newName.toLowerCase()) { exists = true; break; }
-        }
-        if (!exists) {
-            const newOption = document.createElement('option'); newOption.value = newName; newOption.innerText = newName;
-            activeUserSelect.appendChild(newOption);
-        }
-        activeUserSelect.value = newName; newUserNameInput.value = ""; 
     });
-    editUserBtn.addEventListener('click', () => {
-        const current = activeUserSelect.options[activeUserSelect.selectedIndex]; if (!current) return;
-        const newName = prompt("Update user name:", current.value);
-        if (newName !== null && newName.trim() !== "") { current.value = newName.trim(); current.innerText = newName.trim(); }
-    });
-    deleteUserBtn.addEventListener('click', () => {
-        if (activeUserSelect.options.length <= 1) { alert("Error: System requires at least one active user."); return; }
-        if (confirm(`Remove user "${activeUserSelect.value}"?`)) activeUserSelect.remove(activeUserSelect.selectedIndex);
-    });
-    
-    // FILE UPLOAD WITH PDF CONVERSION
-    imageInput.addEventListener('change', async (e) => {
-        const selectedFiles = Array.from(e.target.files);
-        if (selectedFiles.length === 0) return;
 
-        const folderName = folderInput.value.trim() || 'General Files';
-        const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-        let firstNewId = null;
+    // --- 2. UPLOAD FILE ---
+    fileUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-        for (const file of selectedFiles) {
-            let dataUrl = "";
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const currentDate = new Date();
+            // Format: e.g., "15 October 2023"
+            const formattedDate = currentDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
             
-            // PAGPROSESO KUNG PDF ANG IN-UPLOAD
-            if (file.type === "application/pdf" || file.name.endsWith('.pdf')) {
-                try {
-                    dataUrl = await convertPdfPageToDataUrl(file);
-                } catch (err) {
-                    console.error("PDF engine crash:", err);
-                    alert(`Hindi maproseso ang PDF file: ${file.name}. Baka corrupt ang file.`);
-                    continue;
-                }
-            } else {
-                // Karaniwang image processing (PNG/JPG)
-                dataUrl = await fileToDataUrl(file);
-            }
-
-            const fileId = 'file_' + Date.now() + Math.random().toString(36).substr(2, 5);
-            if (!firstNewId) firstNewId = fileId;
-
-            filesArray.push({
-                id: fileId, name: file.name, src: dataUrl, texts: [],
-                undoStack: [[]], redoStack: [], folder: folderName, date: currentDate
-            });
-        }
-        
-        imageInput.value = ''; renderFileList();
-        if (firstNewId) { switchToFile(firstNewId); }
-        broadcastStateToTeammates();
-    });
-
-    const fileToDataUrl = (file) => new Promise((resolve) => {
-        const reader = new FileReader(); reader.onload = (e) => resolve(e.target.result); reader.readAsDataURL(file);
-    });
-
-    // MAGICAL ENGINE: Ginagawang high-quality image data URL ang Page 1 ng PDF
-    function convertPdfPageToDataUrl(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    const typedarray = new Uint8Array(e.target.result);
-                    const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
-                    const page = await pdf.getPage(1); // Kunin ang Page 1
-                    
-                    const viewport = page.getViewport({ scale: 2.0 }); // 2.0 scale para malinaw ang mga teksto
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    
-                    await page.render({ canvasContext: context, viewport: viewport }).promise;
-                    resolve(canvas.toDataURL('image/jpeg', 0.92));
-                } catch (err) { reject(err); }
+            const newFile = {
+                id: 'doc_' + Date.now(),
+                name: file.name,
+                src: event.target.result,
+                createdBy: editorSelect.value,
+                lastEditedBy: editorSelect.value,
+                date: formattedDate,
+                time: currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
-            reader.readAsArrayBuffer(file);
+            
+            filesData.push(newFile);
+            switchToFile(newFile.id);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // --- 3. SWITCH FILE ---
+    function switchToFile(id) {
+        activeFileId = id;
+        const file = filesData.find(f => f.id === id);
+        
+        mainImage.src = file.src;
+        imageContainer.style.display = 'inline-block';
+        noFileText.style.display = 'none';
+        
+        // Linisin ang mga lumang text pag lumipat ng file (Para sa simpleng version, hindi na muna natin isinave ang coordinates ng text para hindi mag-crash, fresh overlay every switch)
+        document.querySelectorAll('.text-overlay').forEach(el => el.remove());
+
+        renderDirectory();
+    }
+
+    // --- 4. RENDER DIRECTORY (Folders) ---
+    function renderDirectory() {
+        directoryList.innerHTML = '';
+        filesData.forEach(file => {
+            const folderDiv = document.createElement('div');
+            folderDiv.className = `folder-item ${file.id === activeFileId ? 'active' : ''}`;
+            folderDiv.onclick = () => switchToFile(file.id);
+            
+            folderDiv.innerHTML = `
+                <div class="folder-name">📁 ${file.name}</div>
+                <div class="folder-meta">
+                    <span><span class="badge">Created by</span> ${file.createdBy}</span>
+                    <span><span class="badge">Last Edit</span> ${file.lastEditedBy}</span>
+                    <span style="margin-top: 4px; color: #0f172a;">📅 ${file.date} at ${file.time}</span>
+                </div>
+            `;
+            directoryList.appendChild(folderDiv);
         });
     }
 
-    function renderFileList() {
-        fileListContainer.innerHTML = '';
-        if (filesArray.length === 0) {
-            fileListContainer.innerHTML = '<div style="color: #94a3b8; font-size: 13px; text-align: center; margin-top: 20px;">Directory empty.</div>';
-            return;
-        }
-        const folders = {};
-        filesArray.forEach(file => {
-            const fName = file.folder || 'General Files'; if (!folders[fName]) folders[fName] = []; folders[fName].push(file);
-        });
-        for (const [fName, files] of Object.entries(folders)) {
-            const header = document.createElement('div'); header.className = 'folder-header';
-            header.innerHTML = `<span class="folder-icon">📁</span> ${fName}`; fileListContainer.appendChild(header);
+    // --- 5. ADD TEXT TO IMAGE ---
+    imageContainer.addEventListener('click', (e) => {
+        // Siguraduhin na sa mismong image o container nag-click, hindi sa existing text
+        if (e.target !== imageContainer && e.target !== mainImage) return;
+        if (!activeFileId) return;
 
-            files.forEach(file => {
-                const div = document.createElement('div'); div.className = `file-item ${file.id === activeFileId ? 'active' : ''}`;
-                div.onclick = () => { switchToFile(file.id); broadcastStateToTeammates(); };
-
-                const info = document.createElement('div'); info.className = 'file-info';
-                const name = document.createElement('span'); name.className = 'file-name'; name.innerText = file.name;
-                const date = document.createElement('span'); date.className = 'file-date'; date.innerText = file.date || 'Unknown';
-                info.appendChild(name); info.appendChild(date);
-
-                const actions = document.createElement('div'); actions.className = 'file-actions';
-                const renameBtn = document.createElement('button'); renameBtn.className = 'btn-action-sm'; renameBtn.innerHTML = '✎';
-                renameBtn.onclick = (e) => { e.stopPropagation(); renameFile(file.id); };
-                const deleteBtn = document.createElement('button'); deleteBtn.className = 'btn-action-sm delete'; deleteBtn.innerHTML = '✕';
-                deleteBtn.onclick = (e) => { e.stopPropagation(); deleteFile(file.id); };
-
-                actions.appendChild(renameBtn); actions.appendChild(deleteBtn);
-                div.appendChild(info); div.appendChild(actions); fileListContainer.appendChild(div);
-            });
-        }
-    }
-
-    function renameFile(fileId) {
-        const file = filesArray.find(f => f.id === fileId); if (!file) return;
-        const newName = prompt("Rename file:", file.name);
-        if (newName !== null && newName.trim() !== "") { file.name = newName.trim(); renderFileList(); broadcastStateToTeammates(); }
-    }
-
-    function switchToFile(fileId, fromNetwork = false) {
-        if (!fromNetwork) saveCurrentTextsState();
-        activeFileId = fileId; const file = filesArray.find(f => f.id === fileId);
-        if (!file) { imageWrapper.style.display = 'none'; noFileText.style.display = 'block'; return; }
-
-        mainImage.src = ""; mainImage.src = file.src;
-        noFileText.style.display = 'none'; imageWrapper.style.display = 'inline-block';
+        const rect = imageContainer.getBoundingClientRect();
+        const textDiv = document.createElement('div');
+        textDiv.className = 'text-overlay';
+        textDiv.contentEditable = 'true';
+        textDiv.innerText = 'Type here...';
         
-        renderTextsFromActiveFile(); renderFileList(); updateUndoRedoButtonsState();
-    }
-
-    // WORKSPACE ACTIONS & HISTORY
-    function recordAction() {
-        if (activeFileId === null) return; const file = filesArray.find(f => f.id === activeFileId); if (!file) return;
-        const overlays = imageWrapper.querySelectorAll('.text-overlay');
-        const currentTextsState = Array.from(overlays).map(box => ({
-            content: box.innerText.replace(box.querySelector('.user-badge')?.innerText || '', '').trim(), 
-            color: box.style.color, fontSize: box.style.fontSize, left: box.style.left, top: box.style.top, user: box.getAttribute('data-user')
-        }));
-        file.texts = currentTextsState;
-        const lastState = file.undoStack[file.undoStack.length - 1];
-        if (JSON.stringify(lastState) === JSON.stringify(currentTextsState)) return; 
-        file.undoStack.push(JSON.parse(JSON.stringify(currentTextsState))); file.redoStack = []; 
-        updateUndoRedoButtonsState(); broadcastStateToTeammates(); 
-    }
-
-    function handleUndo() {
-        if (activeFileId === null) return; const file = filesArray.find(f => f.id === activeFileId); if (!file || file.undoStack.length <= 1) return; 
-        const current = file.undoStack.pop(); file.redoStack.push(current);
-        file.texts = JSON.parse(JSON.stringify(file.undoStack[file.undoStack.length - 1]));
-        renderTextsFromActiveFile(); updateUndoRedoButtonsState(); broadcastStateToTeammates();
-    }
-
-    function handleRedo() {
-        if (activeFileId === null) return; const file = filesArray.find(f => f.id === activeFileId); if (!file || file.redoStack.length === 0) return;
-        const nextState = file.redoStack.pop(); file.undoStack.push(nextState); file.texts = JSON.parse(JSON.stringify(nextState));
-        renderTextsFromActiveFile(); updateUndoRedoButtonsState(); broadcastStateToTeammates();
-    }
-
-    function updateUndoRedoButtonsState() {
-        if (activeFileId === null) { undoBtn.disabled = true; redoBtn.disabled = true; return; }
-        const file = filesArray.find(f => f.id === activeFileId); if (!file) return;
-        undoBtn.disabled = file.undoStack.length <= 1; redoBtn.disabled = file.redoStack.length === 0;
-    }
-
-    function saveCurrentTextsState() {
-        if (activeFileId === null) return; const file = filesArray.find(f => f.id === activeFileId); if (!file) return;
-        const overlays = imageWrapper.querySelectorAll('.text-overlay');
-        file.texts = Array.from(overlays).map(box => ({
-            content: box.innerText.replace(box.querySelector('.user-badge')?.innerText || '', '').trim(),
-            color: box.style.color, fontSize: box.style.fontSize, left: box.style.left, top: box.style.top, user: box.getAttribute('data-user')
-        }));
-    }
-
-    function renderTextsFromActiveFile() {
-        const file = filesArray.find(f => f.id === activeFileId); if (!file) return;
-        imageWrapper.querySelectorAll('.text-overlay').forEach(el => el.remove());
-        file.texts.forEach(textData => {
-            imageWrapper.appendChild(createTextBoxElement(textData.content, textData.color, textData.fontSize, textData.left, textData.top, textData.user));
-        });
-    }
-
-    function deleteFile(fileId) {
-        if (!confirm("Confirm deletion of document?")) return;
-        filesArray = filesArray.filter(f => f.id !== fileId);
-        if (activeFileId === fileId) { activeFileId = null; imageWrapper.style.display = 'none'; noFileText.style.display = 'block'; }
-        renderFileList(); updateUndoRedoButtonsState(); broadcastStateToTeammates();
-    }
-
-    imageWrapper.addEventListener('click', (e) => {
-        if (e.target.classList.contains('text-overlay') || e.target.classList.contains('user-badge')) return;
-        const rect = imageWrapper.getBoundingClientRect();
-        const leftStr = (e.clientX - rect.left - 10) + 'px'; const topStr = (e.clientY - rect.top - 15) + 'px';
-        const textBox = createTextBoxElement('Input text...', colorInput.value, sizeInput.value + 'px', leftStr, topStr, activeUserSelect.value);
-        imageWrapper.appendChild(textBox); recordAction(); 
+        // Kalkulahin ang position
+        textDiv.style.left = (e.clientX - rect.left) + 'px';
+        textDiv.style.top = (e.clientY - rect.top) + 'px';
         
-        const node = textBox.childNodes[textBox.childNodes.length - 1];
-        if (node && node.nodeType === 3) {
-            const range = document.createRange(); const sel = window.getSelection();
-            range.setStart(node, 0); range.setEnd(node, node.length); sel.removeAllRanges(); sel.addRange(range);
-        }
-        textBox.focus();
-    });
-
-    function createTextBoxElement(content, color, fontSize, left, top, userName) {
-        const textBox = document.createElement('div'); textBox.className = 'text-overlay'; textBox.contentEditable = 'true';
-        textBox.style.color = color; textBox.style.fontSize = fontSize; textBox.style.left = left; textBox.style.top = top;
-        textBox.setAttribute('data-user', userName);
-
-        if (userName) {
-            const badge = document.createElement('span'); badge.className = 'user-badge'; badge.contentEditable = 'false'; 
-            badge.innerText = userName.substring(0, 3).toUpperCase();
-            const colors = ['#2563eb', '#0891b2', '#059669', '#d97706', '#7c3aed'];
-            let hash = 0; for(let i = 0; i < userName.length; i++) hash += userName.charCodeAt(i);
-            badge.style.backgroundColor = colors[hash % colors.length]; textBox.appendChild(badge);
-        }
-        textBox.appendChild(document.createTextNode(content));
-        
-        textBox.addEventListener('input', broadcastStateToTeammates); textBox.addEventListener('blur', recordAction);
-        textBox.addEventListener('dblclick', () => { textBox.remove(); recordAction(); });
-
-        let isDragging = false; let startX, startY, initialLeft, initialTop;
-        textBox.addEventListener('mousedown', (e) => {
-            if (document.activeElement === textBox) return;
-            isDragging = true; startX = e.clientX; startY = e.clientY; initialLeft = textBox.offsetLeft; initialTop = textBox.offsetTop;
-            document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp); e.preventDefault();
-        });
-        function onMouseMove(e) {
-            if (!isDragging) return; textBox.style.left = (initialLeft + (e.clientX - startX)) + 'px'; textBox.style.top = (initialTop + (e.clientY - startY)) + 'px';
-            broadcastStateToTeammates();
-        }
-        function onMouseUp() {
-            if (!isDragging) return; isDragging = false;
-            document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); recordAction(); 
-        }
-        return textBox;
-    }
-
-    colorInput.addEventListener('change', () => {
-        const act = document.activeElement; if (act && act.classList.contains('text-overlay')) { act.style.color = colorInput.value; recordAction(); }
-    });
-    sizeInput.addEventListener('change', () => {
-        const act = document.activeElement; if (act && act.classList.contains('text-overlay')) { act.style.fontSize = sizeInput.value + 'px'; recordAction(); }
-    });
-
-    undoBtn.addEventListener('click', handleUndo); redoBtn.addEventListener('click', handleRedo);
-    document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); handleUndo(); }
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); handleRedo(); }
-    });
-
-    // EXPORT HANDLER
-    downloadBtn.addEventListener('click', async () => {
-        saveCurrentTextsState(); if (filesArray.length === 0) { alert("Error: No documents available for export."); return; }
-        
-        const selectedFormat = exportFormat.value;
-        downloadBtn.disabled = true; downloadBtn.innerText = "Processing...";
-
-        try {
-            if (selectedFormat === 'pdf') {
-                const { jsPDF } = window.jspdf; const pdf = new jsPDF();
-                for (let i = 0; i < filesArray.length; i++) {
-                    const file = filesArray[i]; if (i > 0) pdf.addPage();
-                    const url = await renderFileWithTextsToDataUrl(file, 'image/jpeg');
-                    const props = pdf.getImageProperties(url);
-                    const pdfW = pdf.internal.pageSize.getWidth(); const pdfH = pdf.internal.pageSize.getHeight();
-                    const ratio = Math.min(pdfW / props.width, pdfH / props.height);
-                    const w = props.width * ratio; const h = props.height * ratio;
-                    pdf.addImage(url, 'JPEG', (pdfW - w) / 2, (pdfH - h) / 2, w, h);
-                }
-                pdf.save('System_Export.pdf');
-            } else {
-                const activeFile = filesArray.find(f => f.id === activeFileId);
-                if (!activeFile) { alert("Please select a file first."); return; }
-                const mime = selectedFormat === 'png' ? 'image/png' : 'image/jpeg';
-                const ext = selectedFormat === 'png' ? '.png' : '.jpg';
-                const cleanName = activeFile.name.replace(/\.[^/.]+$/, "");
-                const url = await renderFileWithTextsToDataUrl(activeFile, mime);
-                
-                const link = document.createElement('a'); link.download = `${cleanName}_edited${ext}`; link.href = url; link.click();
+        // Pagkatapos mag-type, i-update ang "Last Edited By"
+        textDiv.addEventListener('blur', () => {
+            const file = filesData.find(f => f.id === activeFileId);
+            if (file) {
+                file.lastEditedBy = editorSelect.value;
+                file.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                renderDirectory();
             }
-        } catch (err) { console.error("Export error:", err); } 
-        finally { downloadBtn.disabled = false; downloadBtn.innerText = "Download File"; }
+        });
+
+        imageContainer.appendChild(textDiv);
+        textDiv.focus();
     });
 
-    function renderFileWithTextsToDataUrl(file, mimeType = 'image/jpeg') {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-                const ctx = hiddenCanvas.getContext('2d');
-                hiddenCanvas.width = img.naturalWidth; hiddenCanvas.height = img.naturalHeight;
-                ctx.drawImage(img, 0, 0);
-                const dispW = mainImage.clientWidth || 500; const scaleX = img.naturalWidth / dispW;
-                const scaleY = img.naturalHeight / (mainImage.clientHeight || 500);
+    // --- 6. EXPORTING / DOWNLOADING ---
+    downloadBtn.addEventListener('click', () => {
+        if (!activeFileId) return alert("Please select or upload a document first.");
+        
+        const format = exportFormat.value;
+        const currentFile = filesData.find(f => f.id === activeFileId);
+        const fileName = currentFile.name.split('.')[0]; // Kunin ang pangalan walang extension
 
-                file.texts.forEach(textData => {
-                    if (textData.content.trim() === '' || textData.content === 'Input text...') return;
-                    const boxFSize = parseFloat(textData.fontSize);
-                    const targetX = (parseFloat(textData.left) + 8) * scaleX;
-                    const targetY = (parseFloat(textData.top) + (boxFSize * 0.8) + 4) * scaleY;
-                    if (textData.user) {
-                        ctx.font = `600 ${12 * scaleX}px 'Inter', Arial`; ctx.fillStyle = '#64748b';
-                        ctx.fillText(`[${textData.user}]`, targetX, targetY - (14 * scaleY));
-                    }
-                    ctx.font = `600 ${boxFSize * scaleX}px 'Inter', Arial`; ctx.fillStyle = textData.color;
-                    ctx.textBaseline = 'alphabetic'; ctx.fillText(textData.content, targetX, targetY);
-                });
-                resolve(hiddenCanvas.toDataURL(mimeType, mimeType === 'image/jpeg' ? 0.95 : undefined));
-            };
-            img.src = file.src;
+        // Gagamitin natin ang html2canvas para kunin ang picture KASAMA ang text
+        html2canvas(imageContainer, { useCORS: true, backgroundColor: null }).then(canvas => {
+            if (format === 'pdf') {
+                // PDF Export logic
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: canvas.width > canvas.height ? 'l' : 'p', unit: 'px', format: [canvas.width, canvas.height] });
+                pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+                pdf.save(`${fileName}_Exported.pdf`);
+            } else {
+                // PNG / JPEG Export logic
+                const link = document.createElement('a');
+                link.download = `${fileName}_Exported.${format}`;
+                link.href = canvas.toDataURL(`image/${format}`, 1.0);
+                link.click();
+            }
         });
-    }
+    });
+
 </script>
 </body>
 </html>
